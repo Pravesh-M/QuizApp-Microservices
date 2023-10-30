@@ -1,9 +1,11 @@
 package com.practice.quiz.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Quiz {
 
     @Id
@@ -20,4 +23,9 @@ public class Quiz {
 
     @ElementCollection
     private List<Long> questions;
+
+    public Quiz(String quizName, List<Long> questions) {
+        this.quizName = quizName;
+        this.questions = questions;
+    }
 }

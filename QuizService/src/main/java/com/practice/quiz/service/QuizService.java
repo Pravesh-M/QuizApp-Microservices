@@ -22,24 +22,23 @@ public class QuizService {
 
         List<Long> questions = client.generateQuestionsForQuiz(dto.getCategory(),dto.getNoOfQuestions()).getBody();
 
-        Quiz quiz = new Quiz();
-        quiz.setQuizName(dto.getQuizName());
-        quiz.setQuestions(questions);
+        Quiz quiz = new Quiz(dto.getQuizName(),questions);
         //Saving Quiz and returning Quiz ID
         return quizRepo.save(quiz).getQuizId();
     }
 
     public List<QuestionWrapper> getQuiz(long quizId) {
         //Checking Quiz is Present with quizId
-        Quiz quiz = quizRepo.findById(quizId)
-                .orElseThrow(() -> new EntityNotFoundException("Quiz With QuizId : "+quizId+" Not Found"));
-
+        Quiz quiz = getQuizById(quizId);
         return client.getQuestionsOfQuiz(quiz.getQuestions()).getBody();
     }
 
     public int getMarks(long quizId, List<QuestionResponse> response) {
-        Quiz quiz = quizRepo.findById(quizId)
-                .orElseThrow(() -> new EntityNotFoundException("Quiz With QuizId : "+quizId+" Not Found"));
+        Quiz quiz = getQuizById(quizId);
         return client.getScore(response).getBody();
+    }
+    public Quiz getQuizById(long  quizId) {
+        return quizRepo.findById(quizId)
+                .orElseThrow(() -> new EntityNotFoundException("Quiz with quizID : "+quizId+" is not Present"));
     }
 }
